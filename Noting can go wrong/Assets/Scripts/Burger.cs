@@ -16,8 +16,9 @@ public class Burger : MonoBehaviour, IInteractable
     {
         if (interactor.InteractorPrefab != null)
         {
-            AddIngredient(interactor.InteractorPrefab);
-            gameObject.GetComponent<BoxCollider>().size += new Vector3(0,interactor.InteractorPrefab.transform.localScale.y,0);
+            GameObject copy = Instantiate(interactor.InteractorPrefab);
+            AddIngredient(copy);
+            gameObject.GetComponent<BoxCollider>().size += new Vector3(0,copy.transform.localScale.y,0);
             interactor.InteractorPrefab = null;
         }
         else

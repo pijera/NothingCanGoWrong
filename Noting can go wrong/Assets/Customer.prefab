@@ -12,9 +12,11 @@ GameObject:
   - component: {fileID: 4120095840480105193}
   - component: {fileID: 8093218833719822510}
   - component: {fileID: 2057357671539084356}
+  - component: {fileID: 7518223652612073177}
+  - component: {fileID: 4247280967676650585}
   m_Layer: 0
-  m_Name: Costomer
-  m_TagString: Untagged
+  m_Name: Customer
+  m_TagString: Costomer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.229703, y: 1.185, z: -9.859}
-  m_LocalScale: {x: 1.38, y: 1.5, z: 1.18}
+  m_LocalScale: {x: 1.38, y: 1.5, z: 1.38}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -107,3 +109,45 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &7518223652612073177
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8626282438639311131}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 63616d0ba4c27fa4ea0c2f34aac7c0d1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4247280967676650585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8626282438639311131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 430bc8ea4f428cb43a9e0ee0df57b4ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Interactor: {fileID: 0}
+  cashRegister: {fileID: 0}
+  animator: {fileID: 7518223652612073177}
+  toppings:
+  - {fileID: 3089529020492347136, guid: 99fe9627019f7b442bd9b7018b5e9653, type: 3}
+  burger: {fileID: 0}
+  topBun: {fileID: 0}
+  bottomBun: {fileID: 0}
+  meat: {fileID: 0}

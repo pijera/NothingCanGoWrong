@@ -28,7 +28,7 @@ public class Interactor : MonoBehaviour
                 if (hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactableObj))
                 {
                     
-                    if (hitInfo.collider.CompareTag("Meso"))
+                    if (hitInfo.collider.CompareTag("Meso") || hitInfo.collider.CompareTag("Prilog"))
                     {
                         if (InteractorPrefab == null)
                         {

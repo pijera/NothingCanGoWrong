@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,12 +14,20 @@ public class CustomerSystem : MonoBehaviour
     public GameObject[] toppings;
     public GameObject burger;
     
-    private List<GameObject> orderToppings = new List<GameObject>();
+    private List<string> orderToppings = new List<string>();
     private bool isOrderGenerated = false;
 
     public GameObject topBun;
     public GameObject bottomBun;
     public GameObject meat;
+
+    void Awake()
+    {
+        Interactor = GameObject.Find("Player").GetComponent<Interactor>();
+        cashRegister = GameObject.Find("Cash Register").GetComponent<CashRegister>();
+    }
+    
+    
     void Update()
     {
         if (Interactor.InteractorPrefab!=null && Interactor.InteractorPrefab.name=="Burger")
@@ -27,7 +36,7 @@ public class CustomerSystem : MonoBehaviour
             
             topBun = burger.transform.Find("TopBun").gameObject;
             bottomBun = burger.transform.Find("BottomBun").gameObject;
-            meat = burger.transform.Find("Meat").gameObject;
+            meat = burger.transform.Find("Meat(Clone)").gameObject;
 
             if (topBun==null || bottomBun==null || meat==null)
             {
@@ -47,7 +56,8 @@ public class CustomerSystem : MonoBehaviour
             {
                 if (CheckOrder())
                 {
-                    animator.SetTrigger("Paid");   
+                    animator.SetTrigger("Paid");
+                    
                 }
             }
         }
@@ -55,13 +65,14 @@ public class CustomerSystem : MonoBehaviour
 
     public void Order()
     {
-        int randomNumbOfToppings = UnityEngine.Random.Range(0, 3);
+        orderToppings.Clear(); // Clear previous order
+
+        int randomNumbOfToppings = UnityEngine.Random.Range(1, 4); // At least 1 topping
 
         for (int i = 0; i < randomNumbOfToppings; i++)
         {
             int randomToppingIndex = UnityEngine.Random.Range(0, toppings.Length);
-            orderToppings.Add(toppings[randomToppingIndex]);
-           
+            orderToppings.Add(toppings[randomToppingIndex].name+"(Clone)"); // Store the topping name
         }
 
         Debug.Log(GetOrderDescription());
@@ -69,36 +80,36 @@ public class CustomerSystem : MonoBehaviour
 
     public bool CheckOrder()
     {
-       
         List<GameObject> burgerToppings = GetToppings();
-        
+
         if (!MustHaveToppings())
         {
             Debug.Log("Nemas hleb ili meso.");
             return false;
         }
-        
-        
+
         if (burgerToppings.Count != orderToppings.Count)
         {
-            Debug.Log("Ne tacan broj dodataka.");
+            Debug.Log("Ne tacan broj dodataka. Order: " + orderToppings.Count + ", Burger: " + burgerToppings.Count);
             return false;
         }
 
-        foreach (GameObject topping in orderToppings)
+        // Compare topping names
+        foreach (string toppingName in orderToppings)
         {
-            if (!burgerToppings.Contains(topping))
+            bool found = false;
+            foreach (GameObject topping in burgerToppings)
             {
-                Debug.Log("Fali ti:  " + topping.name);
-                return false;
+                if (topping.name == toppingName)
+                {
+                    found = true;
+                    break;
+                }
             }
-        }
 
-        foreach (GameObject topping in burgerToppings)
-        {
-            if (!orderToppings.Contains(topping))
+            if (!found)
             {
-                Debug.Log("Visak je: " + topping.name);
+                Debug.Log("Fali ti: " + toppingName);
                 return false;
             }
         }
@@ -106,7 +117,6 @@ public class CustomerSystem : MonoBehaviour
         Debug.Log("Porudzbina je tacna!");
         return true;
     }
-
     private bool MustHaveToppings()
     {
         bool IsTopBun = false;
@@ -143,31 +153,42 @@ public class CustomerSystem : MonoBehaviour
 
     private bool IsTopping(GameObject obj)
     {
+        if (obj == null)
+        {
+            Debug.LogWarning("Object je null.");
+            return false;
+        }
+
         foreach (GameObject topping in toppings)
         {
             if (topping == null)
             {
-                Debug.LogWarning("Topping in toppings array is null.");
                 continue;
             }
-            if (topping == obj)
+            if (topping.name+"(Clone)" == obj.name)
             {
                 return true;
             }
         }
         return false;
     }
+
     public string GetOrderDescription()
     {
         string description = "Porudzbina: ";
         for (int i = 0; i < orderToppings.Count; i++)
         {
-            description += orderToppings[i].name;
+            description += orderToppings[i];
             if (i < orderToppings.Count - 1)
             {
                 description += ", ";
             }
         }
         return description;
+    }
+
+    public void Leave()
+    {
+        Destroy(gameObject);
     }
 }

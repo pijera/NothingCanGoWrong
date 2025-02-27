@@ -14,8 +14,8 @@ public class cabbagePickup : MonoBehaviour,IInteractable
         }
         else
         {
-            Interactor.InteractorPrefab = gameObject;
-            gameObject.transform.position = new Vector3(100, 100, 100);
+            GameObject copy = gameObject;
+            Interactor.InteractorPrefab = copy;
         }
     }
 }
