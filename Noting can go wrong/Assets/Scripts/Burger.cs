@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,6 +37,14 @@ public class Burger : MonoBehaviour, IInteractable
         ingredients.Add(bottomBun);
         
         PositionIngredients();
+    }
+
+    void Update()
+    {
+        if (interactor == null)
+        {
+            interactor = GameObject.FindWithTag("Player").GetComponent<Interactor>();
+        }    
     }
 
     public void AddIngredient(GameObject ingredient)

@@ -30,35 +30,33 @@ public class CustomerSystem : MonoBehaviour
     
     void Update()
     {
-        if (Interactor.InteractorPrefab!=null && Interactor.InteractorPrefab.name=="Burger")
+        if (Interactor.InteractorPrefab!=null && Interactor.InteractorPrefab.name=="Burger(Clone)")
         {
             burger = Interactor.InteractorPrefab;
             
-            topBun = burger.transform.Find("TopBun").gameObject;
-            bottomBun = burger.transform.Find("BottomBun").gameObject;
-            meat = burger.transform.Find("Meat(Clone)").gameObject;
+            // Find the buns
+            topBun = burger.transform.Find("TopBun")?.gameObject;
+            bottomBun = burger.transform.Find("BottomBun")?.gameObject;
 
-            if (topBun==null || bottomBun==null || meat==null)
+            // Find the meat by tag
+            GameObject meatObject = burger.transform.Find("Meat(Clone)(Clone)")?.gameObject;
+            if (meatObject != null)
             {
-                Debug.Log("FALI TI NESTO RETARDE");
+                meat = meatObject;
+            }
+            else
+            {
+                meat = null; // Ensure meat is reset if it's not found
             }
         }
-        
-        if (!isOrderGenerated && animator.GetCurrentAnimatorStateInfo(0).IsName("CostomerToWait"))
-        {
-            Order();
-            isOrderGenerated = true;
-        }
+
         
         if (cashRegister.isGiven)
         {
-            if (topBun!=null && bottomBun!=null && meat!=null)
+            if (CheckOrder())
             {
-                if (CheckOrder())
-                {
-                    animator.SetTrigger("Paid");
+                animator.SetTrigger("Paid");
                     
-                }
             }
         }
     }
@@ -67,7 +65,7 @@ public class CustomerSystem : MonoBehaviour
     {
         orderToppings.Clear(); // Clear previous order
 
-        int randomNumbOfToppings = UnityEngine.Random.Range(1, 4); // At least 1 topping
+        int randomNumbOfToppings = UnityEngine.Random.Range(1, 3); // At least 1 topping
 
         for (int i = 0; i < randomNumbOfToppings; i++)
         {
@@ -76,44 +74,51 @@ public class CustomerSystem : MonoBehaviour
         }
 
         Debug.Log(GetOrderDescription());
+        isOrderGenerated = true;
+        
     }
 
     public bool CheckOrder()
     {
         List<GameObject> burgerToppings = GetToppings();
 
-        if (!MustHaveToppings())
+        if (isOrderGenerated)
         {
-            Debug.Log("Nemas hleb ili meso.");
-            return false;
-        }
-
-        if (burgerToppings.Count != orderToppings.Count)
-        {
-            Debug.Log("Ne tacan broj dodataka. Order: " + orderToppings.Count + ", Burger: " + burgerToppings.Count);
-            return false;
-        }
-
-        // Compare topping names
-        foreach (string toppingName in orderToppings)
-        {
-            bool found = false;
-            foreach (GameObject topping in burgerToppings)
+            if (!MustHaveToppings())
             {
-                if (topping.name == toppingName)
-                {
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found)
-            {
-                Debug.Log("Fali ti: " + toppingName);
+                Debug.Log("Nemas hleb ili meso.");
                 return false;
             }
-        }
 
+            if (burgerToppings.Count != orderToppings.Count)
+            {
+                Debug.Log("Ne tacan broj dodataka. Order: " + orderToppings.Count + ", Burger: " + burgerToppings.Count);
+                return false;
+            }
+
+            // Compare topping names
+            foreach (string toppingName in orderToppings)
+            {
+                bool found = false;
+                foreach (GameObject topping in burgerToppings)
+                {
+                    if (topping.name == toppingName)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    Debug.Log("Fali ti: " + toppingName);
+                    return false;
+                }
+            }
+        }
+        
+
+        burgerToppings.Clear();
         Debug.Log("Porudzbina je tacna!");
         return true;
     }
@@ -186,9 +191,12 @@ public class CustomerSystem : MonoBehaviour
         }
         return description;
     }
-
+    
     public void Leave()
     {
+        cashRegister.isGiven = false;
+        Interactor.InteractorPrefab = null;
+        isOrderGenerated = false;
         Destroy(gameObject);
     }
 }

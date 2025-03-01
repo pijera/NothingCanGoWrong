@@ -17,10 +17,11 @@ public class MeatPickup : MonoBehaviour, IInteractable
     
     public void Interact()
     {
-        pickedUp = true;
-        isCooking = false;
-        gameObject.transform.position = new Vector3(100, 100, 100);
+            pickedUp = true;
+            isCooking = false;
+            gameObject.transform.position = new Vector3(100, 100, 100);
         
+
     }
 
     
